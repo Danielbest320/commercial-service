@@ -10,7 +10,9 @@ public class ProviderCommandEvent {
     private ProviderDTO payload;
     private Map<String, Object> statusPayload;
 
-    public ProviderCommandEvent() {}
+    public ProviderCommandEvent() {
+        // Default constructor required for JSON deserialization by Jackson
+    }
 
     public String getEventType() { return eventType; }
     public void setEventType(String eventType) { this.eventType = eventType; }

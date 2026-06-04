@@ -10,6 +10,7 @@ import com.eatup.commercial.utils.provider.exceptions.ProviderNotFoundException;
 import com.eatup.commercial.utils.provider.exceptions.ProviderValidationException;
 import com.eatup.commercial.utils.provider.mapper.ProviderMapper;
 import jakarta.persistence.EntityManager;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,18 +31,23 @@ public class ProviderServiceImpl implements ProviderService {
     private static final Pattern NAME_PATTERN =
             Pattern.compile("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$");
 
+    private static final String FIELD_PROVIDER_ID = "providerId";
+
     private final ProviderRepository providerRepository;
     private final ProviderMapper providerMapper;
     private final EntityManager entityManager;
+    private ProviderServiceImpl self;
 
     public ProviderServiceImpl(
             ProviderRepository providerRepository,
             ProviderMapper providerMapper,
-            EntityManager entityManager
+            EntityManager entityManager,
+            @Lazy ProviderServiceImpl self
     ) {
         this.providerRepository = providerRepository;
         this.providerMapper = providerMapper;
         this.entityManager = entityManager;
+        this.self = self;
     }
 
     @Override
@@ -81,7 +87,7 @@ public class ProviderServiceImpl implements ProviderService {
 
     @Override
     public ProviderDTO getProviderById(UUID providerId) {
-        validateId(providerId, "providerId");
+        validateId(providerId, FIELD_PROVIDER_ID);
         return providerMapper.toDto(findProviderById(providerId));
     }
 
@@ -105,7 +111,7 @@ public class ProviderServiceImpl implements ProviderService {
     @Override
     @Transactional
     public ProviderDTO updateProvider(UUID providerId, ProviderDTO request) {
-        validateId(providerId, "providerId");
+        validateId(providerId, FIELD_PROVIDER_ID);
         validateProviderPayload(request);
 
         ProviderDomain existing = findProviderById(providerId);
@@ -135,13 +141,13 @@ public class ProviderServiceImpl implements ProviderService {
     @Override
     @Transactional
     public ProviderDTO updateProvider(String providerId, ProviderDTO request) {
-        return updateProvider(parseUUID(providerId, "providerId"), request);
+        return self.updateProvider(parseUUID(providerId, FIELD_PROVIDER_ID), request);
     }
 
     @Override
     @Transactional
     public ProviderDTO updateStatus(UUID providerId, String status) {
-        validateId(providerId, "providerId");
+        validateId(providerId, FIELD_PROVIDER_ID);
 
         ProviderStatus newStatus = parseRequiredStatus(status);
         ProviderDomain existing = findProviderById(providerId);
@@ -157,7 +163,7 @@ public class ProviderServiceImpl implements ProviderService {
     @Override
     @Transactional
     public ProviderDTO updateStatus(String providerId, String status) {
-        return updateStatus(parseUUID(providerId, "providerId"), status);
+        return self.updateStatus(parseUUID(providerId, FIELD_PROVIDER_ID), status);
     }
 
     // ── private helpers ────────────────────────────────────────────────────────
