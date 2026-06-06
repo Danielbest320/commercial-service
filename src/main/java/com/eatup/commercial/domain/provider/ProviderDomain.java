@@ -58,10 +58,10 @@ public class ProviderDomain {
     @Column(name = "status", nullable = false)
     private ProviderStatus status;
 
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdDate;
 
-    @Column(name = "modified_date", nullable = false)
+    @Column(name = "modified_at")
     private LocalDateTime modifiedDate;
 
     public ProviderDomain() {
