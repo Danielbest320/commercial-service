@@ -30,7 +30,6 @@ public class ProviderMapper {
 
     public ProviderDomain toDomain(ProviderDTO dto) {
         ProviderDomain domain = new ProviderDomain();
-        domain.setId(dto.getId());
         domain.setBusinessName(dto.getBusinessName());
         domain.setDocumentTypeId(dto.getDocumentTypeId());
         domain.setDocumentNumber(dto.getDocumentNumber());
@@ -44,8 +43,6 @@ public class ProviderMapper {
         domain.setAddress(dto.getAddress());
         domain.setBranchId(dto.getBranchId());
         domain.setStatus(dto.getStatus());
-        domain.setCreatedDate(dto.getCreatedDate());
-        domain.setModifiedDate(dto.getModifiedDate());
         return domain;
     }
 }
